@@ -1,0 +1,32 @@
+% Проверка что списки являются перестановкой друг друга 
+permut([], _). 
+permut([H | T], Values) :- permut(T, Values), member(H, Values), \+ member(H, T). 
+ 
+% V1 в списке слева от V2 
+left(V1, V2, [V1, V2 | _]) :- !.
+left(V1, V2, [_ | T]) :- left(V1, V2, T). 
+ 
+% V1 сидит напротив V2 
+opposite(V1, V2, [V1, _ , V2 | _ ]). 
+ 
+solve(Mark, A) :- 
+  A = [animal(N1, M1), animal(N2, M2),                        
+       animal(N3, M3), animal(N4, M4)], 
+     
+    member(animal(wolf, фауна), A),     % Волк собирает фауну 
+    (member(animal(nuf, флора), A);     % Нуф не интересуется спортивной тематикой 
+    member(animal(nuf, спорт), A)), 
+     
+    left(animal(wolf, _), animal(naf, _), A), % Волк сидит слева от Нафа        
+          
+    left(animal(_, космос), animal(nif, _), A), % Ниф – справа от коллекционера космоса 
+          
+    opposite(animal(nuf, _), animal(naf, _), A), % Нуф сидит напротив Нафа       
+            
+    permut([N1, N2, N3, N4], [wolf, naf, nuf, nif]), 
+    permut([M1, M2, M3, M4], [фауна, флора, космос, спорт]), 
+    member(animal(naf, Mark1), A), write('Марка Нафа: '), writeln(Mark1), % Какие марки собирает Наф? 
+    member(animal(nuf, Mark2), A), write('Марка Нуфа: '), writeln(Mark2), % Какие марки собирает Нуф? 
+    member(animal(nif, Mark3), A), write('Марка Нифа: '), writeln(Mark3). % Какие марки собирает Ниф? 
+ 
+:- initialization(solve(Mark, A)).
